@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="./src/main.js"></script>
+    <title>Vite App</title>
+  </head>
+  <body>
+    <header><h1>Palette Picker</h1></header>
+    <main>
+      <form>
+        <h2>Add a Palette</h2>
+
+        <label for="paletteTitle">Palette Title: </label>
+        <input type="text" name="paletteTitle" id="paletteTitle" required />
+
+        <label for="color1">Color #1</label>
+        <input type="color" name="color1" id="color1" value="#ffffff" />
+
+        <label for="color2">Color #2</label>
+        <input type="color" name="color2" id="color2" value="#ffffff" />
+
+        <label for="color3">Color #3</label>
+        <input type="color" name="color3" id="color3" value="#ffffff" />
+
+        <fieldset>
+          <legend>Temperature</legend>
+
+          <label for="temp">Warm</label>
+          <input type="radio" name="temp" id="temp-warm" value="Warm" />
+
+          <label for="temp">Neutral</label>
+          <input
+            type="radio"
+            name="temp"
+            id="temp-neutral"
+            value="Neutral"
+            checked
+          />
+
+          <label for="temp">Cold</label>
+          <input type="radio" name="temp" id="temp-cold" value="Cold" />
+        </fieldset>
+
+        <button type="submit">Create the Palette</button>
+      </form>
+
+      <section id="palettes">
+        <h2 id="second-heading">Palettes</h2>
+        <ul id="palettesList">
+          <!-- The palettes will go here, so I need to add new list items 
+               as they're created. So an event for submit that will add the 
+               new list item. -->
+          <div class="palette"></div>
+        </ul>
+      </section>
+      <section>
+        <button id="deleteAll" type="button">Delete All Palettes</button>
+      </section>
+    </main>
+    <footer></footer>
+  </body>
+</html>
