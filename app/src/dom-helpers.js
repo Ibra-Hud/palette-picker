@@ -23,7 +23,7 @@ export const newPaletteFunc = (newPalette) => {
   
         <div class="color3">
           <p>Text <span>Example</span></p>
-          <button type="button">
+          <button type="button" id="copy">
             Copy  <span class="hexcode">${newPalette.colors[2]}</span>
           </button>
         </div>

@@ -43,12 +43,16 @@ const handleSubmit = (e) => {
 const form = document.querySelector("form");
 form.addEventListener("submit", handleSubmit);
 
-// const handleCopy = (e) => {
-//   const copyButton = e.target;
-// };
+// document.getElementById("button.copy").addEventListener("click", async () => {
+//   const hexCode = document.querySelector("button.copy.hexcode").textContent;
 
-// const copyButton = document.getElementById("delete");
-// copyButton.addEventListener("click", handleCopy);
+//   try {
+//     await navigator.clipboard.writeText(hexCode);
+//     alert("Hex code copied to clipboard!");
+//   } catch (err) {
+//     console.error("Failed to copy text: ", err);
+//   }
+// });
 
 const handleDeleteAll = (e) => {
   const deleteAll = e.target;
