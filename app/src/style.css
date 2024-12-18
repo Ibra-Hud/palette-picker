@@ -44,6 +44,8 @@ main {
 
 div {
   padding: 0.5rem;
+  background-color: #5d5d5d;
+  border-radius: 5%;
 }
 
 /* Paragraph styling */
@@ -90,6 +92,12 @@ ul {
   gap: 10px;
   list-style-type: none;
   margin: 0;
+}
+
+ul#pc {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
 }
 
 /* List item styling */

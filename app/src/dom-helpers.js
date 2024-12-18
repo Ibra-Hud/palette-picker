@@ -1,47 +1,76 @@
-import { getPalettes } from "./local-storage.js";
+import { handleCopy } from "./main.js";
 
-export const newPaletteFunc = (newPalette) => {
+export const liForDom = (div) => {
   const li = document.createElement("li");
-
-  li.dataset.uuid = newPalette.uuid;
-  li.innerHTML = `<h2>${newPalette.title}</h2>
-    <div class="palette-content">
-      <div class="colors-container">
-        <div class="color1">
-          <p>Text <span>Example</span></p>
-          <button type="button">
-            Copy  <span class="hexcode">${newPalette.colors[0]}</span>
-          </button>
-        </div>
-  
-        <div class="color2">
-          <p>Text <span>Example</span></p>
-          <button type="button">
-            Copy  <span class="hexcode">${newPalette.colors[1]}</span>
-          </button>
-        </div>
-  
-        <div class="color3">
-          <p>Text <span>Example</span></p>
-          <button type="button" id="copy">
-            Copy  <span class="hexcode">${newPalette.colors[2]}</span>
-          </button>
-        </div>
-      </div>
-  
-      <button type="button" id="delete">Delete Palette</button>
-  </div>
-  <div class="temperature">${newPalette.temperature}</div>`;
-
-  return li;
+  li.append(div);
 };
 
-export const loadPalettes = () => {
-  const paletteList = document.getElementById("palettesList");
-  const palettes = getPalettes();
-  paletteList.innerHTML = "";
-  Object.values(palettes).forEach((palette) => {
-    const listItem = newPaletteFunc(palette);
-    paletteList.appendChild(listItem);
+const copyButton = (hexcode) => {
+  const button = document.createElement("button");
+  button.classList.add("copy");
+  button.textContent = `Copy ${hexcode}`;
+  button.dataset.color = hexcode;
+  button.addEventListener("click", () => handleCopy(hexcode));
+
+  return button;
+};
+
+const deleteButtonForDom = (newPalette) => {
+  const deleteButton = document.createElement("button");
+  deleteButton.type = "button";
+  deleteButton.classList.add("delete");
+  deleteButton.textContent = "Delete Palette";
+  deleteButton.dataset.uuid = newPalette.uuid;
+
+  return deleteButton;
+};
+
+const temperatureForDom = (newPalette) => {
+  const divTemp = document.createElement("div");
+  divTemp.classList.add(`${newPalette.temperature}`);
+  divTemp.textContent = `${newPalette.temperature}`;
+  return divTemp;
+};
+
+const colorForDom = (newPalette) => {
+  const ul = document.createElement("ul");
+  ul.className = "colors";
+
+  newPalette.colors.forEach((color) => {
+    const div = document.createElement("div");
+    div.classList.add("color-container");
+    div.dataset.color = color;
+
+    const li = document.createElement("li");
+
+    const p = document.createElement("p");
+    p.textContent = "Text Example";
+    p.style.backgroundColor = color;
+
+    const copy = copyButton(color);
+
+    div.append(p);
+    li.append(div, copy);
+    ul.append(li);
   });
+
+  return ul;
+};
+
+export const newPaletteFunc = (newPalette) => {
+  const palettesContainer = document.getElementById("pc");
+
+  const div = document.createElement("div");
+  div.classList.add("palette");
+  div.dataset.uuid = newPalette.uuid;
+
+  const h3 = document.createElement("h3");
+  h3.textContent = newPalette.title;
+
+  const color = colorForDom(newPalette);
+
+  const temp = temperatureForDom(newPalette);
+
+  div.append(h3, color, deleteButtonForDom(newPalette), temp);
+  palettesContainer.append(div);
 };

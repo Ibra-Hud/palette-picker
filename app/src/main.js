@@ -1,23 +1,26 @@
 import "./style.css";
 import palettes from "./palettes.json";
 import {
-  getPalettes,
   initializePalettesIfEmpty,
   addPalette,
-  deletePaletteByID,
   deleteAllPalettes,
-  setPalettes,
+  getPalettes,
 } from "./local-storage.js";
-import { loadPalettes, newPaletteFunc } from "./dom-helpers";
-
-initializePalettesIfEmpty();
-document.addEventListener("DOMContentLoaded", loadPalettes);
+import { newPaletteFunc } from "./dom-helpers";
 
 const defaultPalettes = palettes;
-
 console.log(defaultPalettes);
 
-const handleSubmit = (e) => {
+const loadPalettes = () => {
+  const paletteList = document.getElementById("pc");
+  const palettes = getPalettes();
+  paletteList.innerHTML = "";
+  Object.values(palettes).forEach((palette) => {
+    newPaletteFunc(palette);
+  });
+};
+
+export const handleSubmit = (e) => {
   e.preventDefault();
   const form = e.target;
   const newPaletteID = crypto.randomUUID();
@@ -33,34 +36,68 @@ const handleSubmit = (e) => {
     temperature: temp,
   };
 
-  const paletteToAdd = addPalette(newPalette);
-  newPaletteFunc(paletteToAdd);
+  addPalette(newPalette);
   loadPalettes();
 
   form.reset();
 };
 
-const form = document.querySelector("form");
-form.addEventListener("submit", handleSubmit);
+export const handleCopy = (hexcode) => {
+  const copyButton = document.querySelector(
+    `button.copy[data-color="${hexcode}"]`
+  );
+  const text = copyButton.textContent;
 
-// document.getElementById("button.copy").addEventListener("click", async () => {
-//   const hexCode = document.querySelector("button.copy.hexcode").textContent;
+  navigator.clipboard.writeText(hexcode).then(() => {
+    copyButton.textContent = `${hexcode} Copied!`;
 
-//   try {
-//     await navigator.clipboard.writeText(hexCode);
-//     alert("Hex code copied to clipboard!");
-//   } catch (err) {
-//     console.error("Failed to copy text: ", err);
-//   }
-// });
+    setTimeout(() => (copyButton.textContent = text), 500);
+  });
+};
 
-const handleDeleteAll = (e) => {
-  const deleteAll = e.target;
+export const handleDeleteAll = () => {
   const ul = document.querySelector("ul");
   ul.innerHTML = "";
 
   deleteAllPalettes();
+  loadPalettes();
 };
 
-const deleteAllButton = document.getElementById("deleteAll");
-deleteAllButton.addEventListener("click", handleDeleteAll);
+export const handleDelete = (e) => {
+  const button = e.target;
+  if (!button.matches(".delete")) return;
+  const specificButton = button.dataset.uuid;
+
+  const text = button.textContent;
+  button.textContent = "Deleting...";
+
+  setTimeout(() => {
+    button.textContent = text;
+    const paletteDiv = button.closest(".palette");
+
+    if (paletteDiv) {
+      paletteDiv.remove();
+    }
+
+    deleteById(specificButton);
+  }, 500);
+};
+
+const mainAct = async () => {
+  await import("/src/dom-helpers.js?t=1734033565029");
+
+  initializePalettesIfEmpty();
+  loadPalettes();
+
+  const form = document.querySelector("form");
+  form.addEventListener("submit", handleSubmit);
+
+  const deleteAllButton = document.getElementById("deleteAll");
+  deleteAllButton.addEventListener("click", handleDeleteAll);
+
+  document
+    .querySelector("#palettes-container")
+    .addEventListener("click", handleDelete);
+};
+
+mainAct();
