@@ -5,22 +5,27 @@ import {
   addPalette,
   deleteAllPalettes,
   getPalettes,
+  deletePaletteByID,
 } from "./local-storage.js";
 import { newPaletteFunc } from "./dom-helpers";
 
 const defaultPalettes = palettes;
 console.log(defaultPalettes);
 
-const loadPalettes = () => {
+export const loadPalettes = () => {
+  console.log("Load palettes start");
   const paletteList = document.getElementById("pc");
   const palettes = getPalettes();
   paletteList.innerHTML = "";
   Object.values(palettes).forEach((palette) => {
     newPaletteFunc(palette);
   });
+
+  console.log("Load palettes end");
 };
 
 export const handleSubmit = (e) => {
+  console.log("Handle Submit start");
   e.preventDefault();
   const form = e.target;
   const newPaletteID = crypto.randomUUID();
@@ -36,13 +41,16 @@ export const handleSubmit = (e) => {
     temperature: temp,
   };
 
-  addPalette(newPalette);
-  loadPalettes();
+  if (newPalette.title != "") {
+    addPalette(newPalette);
+    console.log("Handle Submit end");
+  }
 
   form.reset();
 };
 
 export const handleCopy = (hexcode) => {
+  console.log("Handle Copy Start");
   const copyButton = document.querySelector(
     `button.copy[data-color="${hexcode}"]`
   );
@@ -53,17 +61,21 @@ export const handleCopy = (hexcode) => {
 
     setTimeout(() => (copyButton.textContent = text), 500);
   });
+  console.log("Handle Copy End");
 };
 
 export const handleDeleteAll = () => {
+  console.log("Handle DeleteAll Start");
   const ul = document.querySelector("ul");
   ul.innerHTML = "";
 
   deleteAllPalettes();
   loadPalettes();
+  console.log("Handle DeleteAll end");
 };
 
 export const handleDelete = (e) => {
+  console.log("Handle Delete Start");
   const button = e.target;
   if (!button.matches(".delete")) return;
   const specificButton = button.dataset.uuid;
@@ -79,11 +91,13 @@ export const handleDelete = (e) => {
       paletteDiv.remove();
     }
 
-    deleteById(specificButton);
+    deletePaletteByID(specificButton);
   }, 500);
+  console.log("Handle Delete end");
 };
 
 const mainAct = async () => {
+  console.log("main start");
   await import("/src/dom-helpers.js?t=1734033565029");
 
   initializePalettesIfEmpty();
@@ -98,6 +112,7 @@ const mainAct = async () => {
   document
     .querySelector("#palettes-container")
     .addEventListener("click", handleDelete);
+  console.log("main end");
 };
 
 mainAct();
