@@ -1,4 +1,4 @@
-import startPalettes from "./palettes.json";
+import startPalettes  from "./palettes.json";
 import { loadPalettes } from "./main";
 
 const defaultPalettes = startPalettes;
